@@ -23,8 +23,6 @@ from cmip6.ns_gev.nsgev_config_cmip import DATADIR
 
 ### CST ###
 
-#r = ro.R()
-#r.library('extRemes')   # https://www.rdocumentation.org/packages/extRemes/versions/2.1-3/topics/fevd
 pandas2ri.activate()
 
 r = ro.r
