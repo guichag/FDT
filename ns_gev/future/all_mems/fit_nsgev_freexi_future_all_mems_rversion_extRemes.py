@@ -83,53 +83,16 @@ def load_sgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-L
     return sgev_all
 
 
-def load_sgev_rls_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, ymin=1950, ymax=2100):
-    """load fitted NS-GEV model parameters"""
-    res_ = str(lat_res) + "x" + str(lon_res)
-
-    """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
-    lat_min_ = lat_sub[0]
-    lat_max_ = lat_sub[1]
-
-    assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
-    lon_min_ = lon_sub[0]
-    lon_max_ = lon_sub[1]"""
-
-    # load full s-gev dataset
-    outfile = DATADIR + '/params/s_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_rls'
-
-    with open(outfile, 'rb') as pics:
-        rls_all = dill.load(pics)
-
-    return rls_all
-
-
-def load_sgev_fevd_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, ymin=1950, ymax=2100):
-    """load fitted S-GEV model parameters"""
-    res_ = str(lat_res) + "x" + str(lon_res)
-
-    """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
-    lat_min_ = lat_sub[0]
-    lat_max_ = lat_sub[1]
-
-    assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
-    lon_min_ = lon_sub[0]
-    lon_max_ = lon_sub[1]"""
-
-    # load full s-gev dataset
-    outfile = DATADIR + '/params/s_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_fevd'
-
-    with open(outfile, 'rb') as pics:
-        fevd_all = dill.load(pics)
-
-    return fevd_all
-
-
-def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100):
+def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100, ndays=None):
     """load fitted NS-GEV model parameters"""
     params_ = "-".join(params)
     res_ = str(lat_res) + "x" + str(lon_res)
 
+    if ndays:
+        nd_ = '_' + str(ndays) + 'd'
+    else:
+        nd_ = ''
+
     """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
     lat_min_ = lat_sub[0]
     lat_max_ = lat_sub[1]
@@ -139,7 +102,7 @@ def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-
     lon_max_ = lon_sub[1]"""
 
     # load full s-gev dataset
-    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers)
+    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_' + nd_
 
     with open(outfile, 'rb') as pics:
         nsgev_all = dill.load(pics)
@@ -160,50 +123,6 @@ def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-
             output[k] = nsgev_all[k]"""
 
     return nsgev_all
-
-
-def load_nsgev_rls_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100):
-    """load fitted NS-GEV model parameters"""
-    params_ = "-".join(params)
-    res_ = str(lat_res) + "x" + str(lon_res)
-
-    """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
-    lat_min_ = lat_sub[0]
-    lat_max_ = lat_sub[1]
-
-    assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
-    lon_min_ = lon_sub[0]
-    lon_max_ = lon_sub[1]"""
-
-    # load full s-gev dataset
-    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_rls'
-
-    with open(outfile, 'rb') as pics:
-        rls_all = dill.load(pics)
-
-    return rls_all
-
-
-def load_nsgev_fevd_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-LR', experiment='ssp245', nmembers=10, lat_res=1.27, lon_res=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100):
-    """load fitted NS-GEV model parameters"""
-    params_ = "-".join(params)
-    res_ = str(lat_res) + "x" + str(lon_res)
-
-    """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
-    lat_min_ = lat_sub[0]
-    lat_max_ = lat_sub[1]
-
-    assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
-    lon_min_ = lon_sub[0]
-    lon_max_ = lon_sub[1]"""
-
-    # load full s-gev dataset
-    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_fevd'
-
-    with open(outfile, 'rb') as pics:
-        fevd_all = dill.load(pics)
-
-    return fevd_all
 
 
 ### MAIN ###
