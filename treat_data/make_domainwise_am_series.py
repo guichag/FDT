@@ -22,9 +22,14 @@ from cmip6.treat_data.get_land_points import load_land_points_cmip
 
 ### FUNC ###
 
-def load_am_series_domain(ds='CMIP6', source='IPSL-CM6A-LR', experiment='historical', member='r1i1p1f1', lat_res=1.27, lon_res=2.5, lat_sub=(-90., 90.), lon_sub=(-180., 180.)): # None
+def load_am_series_domain(ds='CMIP6', source='IPSL-CM6A-LR', experiment='historical', member='r1i1p1f1', lat_res=1.27, lon_res=2.5, lat_sub=(-90., 90.), lon_sub=(-180., 180.), ndays=None): # None
     """Load AM series for a given domain"""
     res_ = str(lat_res) + "x" + str(lon_res)
+
+    if ndays:
+        nd_ = '_' + str(ndays) + 'd'
+    else:
+        nd_ = ''
 
     lat_min = -90. # lats_min[ds]
     lat_max = 90. # lats_max[ds]
@@ -51,7 +56,7 @@ def load_am_series_domain(ds='CMIP6', source='IPSL-CM6A-LR', experiment='histori
 
     # load full am series dataset
 
-    outfile = DATADIR + '/am_series/domain_wise/' + ds + '/' + source + '/' + experiment + '/' +  member + '/' + res_ + '/lat({0},{1})'.format(lat_min, lat_max) + '_lon({0},{1})'.format(lon_min, lon_max) + '/amax'
+    outfile = DATADIR + '/am_series/domain_wise/' + ds + '/' + source + '/' + experiment + '/' +  member + '/' + res_ + '/lat({0},{1})'.format(lat_min, lat_max) + '_lon({0},{1})'.format(lon_min, lon_max) + '/amax' + nd_
 
     with open(outfile, 'rb') as pics:
         ams_all = dill.load(pics)
