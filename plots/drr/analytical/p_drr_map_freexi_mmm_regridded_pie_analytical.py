@@ -50,12 +50,18 @@ def add_matrix_NaNs(regridder):
     return regridder
 
 
-def load_regridded_analytical_drr(ds='CMIP6', source='CanESM5', ssp_exp='ssp245', grid_step=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100, yref=2020, nmems=10, rrf=2.):
+def load_regridded_analytical_drr(ds='CMIP6', source='CanESM5', ssp_exp='ssp245', grid_step=2.5, params=['loc', 'scale'], ymin=1950, ymax=2100, yref=2020, nmems=10, rrf=2., ndays=None):
     """Load regridded DRR data"""
     res_all = str(grid_step) + 'x' + str(grid_step)
     params_ = "-".join(params)
+
+    if nd:
+        nd_ = '_' + str(nd) + 'd'
+    else:
+        nd_ = ''
+
     outdir = DATADIR + '/maps/' + ds + '/drr_regridded/' + ssp_exp + '/' + res_all + '/' + params_ + '/DRR'
-    outfile = outdir + '/global_drr_' + source + '_' + str(ymin) + '-' + str(ymax) + '_yref=' + str(yref) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + '.nc'
+    outfile = outdir + '/global_drr_' + source + '_' + str(ymin) + '-' + str(ymax) + '_yref=' + str(yref) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + nd_ + '.nc'
 
     out = xr.open_dataarray(outfile)
 
@@ -81,6 +87,7 @@ if __name__ == '__main__':
     parser.add_argument("--yref", help='reference year', type=int, default=2020)
     parser.add_argument("--rrf", help='Rec. red. factor', type=float, default=2.)
     parser.add_argument("--t0_2plot", help='return periods to plot', type=float, default=100.)
+    parser.add_argument("--ndays", help="RXnD", type=int, default=None)
 
     opts = parser.parse_args()
 
@@ -96,6 +103,7 @@ if __name__ == '__main__':
     yref = opts.yref
     rrf = opts.rrf
     t0_2plot = opts.t0_2plot
+    nd = opts.ndays
 
     params_ = "-".join(params)
 
@@ -120,6 +128,13 @@ if __name__ == '__main__':
 
     years = np.arange(ymin, ymax+1, 1)
     iyref = np.where(years == yref)[0][0]
+
+    if nd:
+        nd_ = '_' + str(nd) + 'd'
+        nd__ = str(nd) + 'd'
+    else:
+        nd_ = ''
+        nd__ = ''
 
     df = gpd.read_file(dbffile)
     dfcny = gpd.read_file(cnydbffile)
@@ -208,6 +223,10 @@ if __name__ == '__main__':
         os.mkdir(figdir + '/analytical')
     figdir = figdir + '/analytical'
 
+    if not os.path.isdir(figdir + '/' + nd__):
+        os.mkdir(figdir + '/' + nd__)
+    figdir = figdir + '/' + nd__
+
 
     #~ Plot params
 
@@ -249,7 +268,7 @@ if __name__ == '__main__':
 
         res_ = str(lat_res_) + "x" + str(lon_res_)
 
-        data = load_analytical_drr(ds=ds, source=src, experiment=ssp_exp, nmems=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax, rrf=rrf)
+        data = load_analytical_drr(ds=ds, source=src, experiment=ssp_exp, nmems=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax, rrf=rrf, ndays=nd)
 
         coords = list(data.keys())
 
@@ -357,7 +376,7 @@ if __name__ == '__main__':
 
         #~ Save
 
-        outfile = outdir + '/global_drr_' + src + '_' + str(ymin) + '-' + str(ymax) + '_yref=' + str(yref) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + '.nc'
+        outfile = outdir + '/global_drr_' + src + '_' + str(ymin) + '-' + str(ymax) + '_yref=' + str(yref) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + nd_ + '.nc'
         out_drrs_LR.to_netcdf(outfile)
 
 
@@ -549,7 +568,7 @@ if __name__ == '__main__':
     tab_ = tab_.astype(float).round(1)
     mean_prop = tab_.mean(axis=0)
 
-    tabfile = outdir + '/global_drr_t0=' + str(t0_2plot) + '_rrf=' + str(rrf)
+    tabfile = outdir + '/global_drr_t0=' + str(t0_2plot) + '_rrf=' + str(rrf) + nd_
 
     tab_.to_latex(tabfile)
 
@@ -577,7 +596,7 @@ if __name__ == '__main__':
 
     tab_sum = tab_sum.astype(float).round(1)
 
-    tab_sum_file = outdir + '/global_drr_rrf=' + str(rrf) + '_summary'
+    tab_sum_file = outdir + '/global_drr_rrf=' + str(rrf) + '_summary' + nd_
     tab_sum.to_latex(tab_sum_file)
 
 
