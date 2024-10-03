@@ -39,10 +39,15 @@ def get_drr(loc_int, loc_sl, sca_int, sca_sl, xi, x, T0, T1):
     return drr
 
 
-def load_analytical_drr(ds='CMIP6', source='CanESM5', experiment='ssp245', lat_res=2.79, lon_res=2.81, params=['loc', 'scale'], nmems=10, ymin=1950, ymax=2100, rrf=2., lat_sub=(-90., 90.), lon_sub=(-180., 180.)):
+def load_analytical_drr(ds='CMIP6', source='CanESM5', experiment='ssp245', lat_res=2.79, lon_res=2.81, params=['loc', 'scale'], nmems=10, ymin=1950, ymax=2100, rrf=2., lat_sub=(-90., 90.), lon_sub=(-180., 180.), ndays=None):
     """Load DRR values computed analytically"""
     res = str(lat_res) + "x" + str(lon_res)
     params_ = "-".join(params)
+
+    if ndays:
+        nd_ = '_' + str(ndays) + 'd'
+    else:
+        nd_ = ''
 
     lat_min = -90. # lats_min[ds]
     lat_max = 90. # lats_max[ds]
@@ -72,7 +77,7 @@ def load_analytical_drr(ds='CMIP6', source='CanESM5', experiment='ssp245', lat_r
 
     outdir = DATADIR + '/point/' + ds + '/' + source + '/' + experiment + '/' + res + '/' + params_ + '/analytical_drr'
 
-    outfile = outdir + '/drr_' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmems) + '_rrf=' + str(rrf) # + '_yref=' + str(yref) + '_' + ts_ + '-yr_nboots=' + str(nboots)
+    outfile = outdir + '/drr_' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + nd_
 
     with open(outfile, 'rb') as pics:
         drr_all = dill.load(pics)
@@ -109,6 +114,7 @@ if __name__ == '__main__':
     parser.add_argument("--lon_pt", help='longitude of the point to plot', type=float, default=2.1)
     parser.add_argument("--rrf", help='recurrence reduction factor', type=float, default=2.)
     parser.add_argument("--nboots", help='number of boot samples', type=int, default=100)
+    parser.add_argument("--ndays", help="RXnD", type=int, default=None)
 
     opts = parser.parse_args()
 
@@ -123,6 +129,7 @@ if __name__ == '__main__':
     lon_pt = opts.lon_pt
     rrf = opts.rrf
     nboots = opts.nboots
+    nd = opts.ndays
 
     params_ = "-".join(params)
 
@@ -133,6 +140,10 @@ if __name__ == '__main__':
 
     years = np.arange(ymin, ymax+1, 1)
 
+    if nd:
+        nd_ = '_' + str(nd) + 'd'
+    else:
+        nd_ = ''
 
     """boots_dir = OUTDIR + '/data/boots/uncertainty/ns_all_mems/' + ds + '/' + src + '/' + ssp_exp + '/' + res_ + '/' + params_
 
@@ -183,7 +194,7 @@ if __name__ == '__main__':
 
     print('-- Get data --')
 
-    orig_pars = load_nsgev_params_freexi_cmip_future_all_mems(ds=ds, source=src, experiment=ssp_exp, nmembers=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax)
+    orig_pars = load_nsgev_params_freexi_cmip_future_all_mems(ds=ds, source=src, experiment=ssp_exp, nmembers=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax, ndays=nd)
 
     """boots_pars_all = []
 
@@ -299,7 +310,7 @@ if __name__ == '__main__':
 
     print('\n-- Save --')
 
-    outfile = outdir + '/drr_' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmems) + '_rrf=' + str(rrf)
+    outfile = outdir + '/drr_' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + nd_
 
     with open(outfile, 'wb') as pics:
         pickle.dump(obj=out_drrs, file=pics)
