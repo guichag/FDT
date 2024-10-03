@@ -23,8 +23,6 @@ from cmip6.ns_gev.nsgev_config_cmip import DATADIR
 
 ### CST ###
 
-#r = ro.R()
-#r.library('extRemes')   # https://www.rdocumentation.org/packages/extRemes/versions/2.1-3/topics/fevd
 pandas2ri.activate()
 
 r = ro.r
@@ -102,7 +100,7 @@ def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-
     lon_max_ = lon_sub[1]"""
 
     # load full s-gev dataset
-    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + '_' + nd_
+    outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + nd_
 
     with open(outfile, 'rb') as pics:
         nsgev_all = dill.load(pics)
@@ -381,13 +379,9 @@ if __name__ == '__main__':
 
             #~ Treat optim outputs
 
-            #out_nsgev = dict(zip(nsgev.names, list(nsgev)))
-            #names = nsgev.names
-
             nsresults = nsgev.rx2['results']
 
             nspars = nsresults[0]
-            #nspars = pars_func_r(nsgev)
             nllh_ns = nsresults[1][0]
             nsconv = nsresults[3]
             nshess = nsresults[5]
@@ -446,10 +440,6 @@ if __name__ == '__main__':
                     scale_vals = [nspars[3], nspars[2]]  # [slope, interc]
                     qcov = np.array([ar, ynorm0, ar, ynorm0, ar]).transpose()
 
-                    """loc_ci = [[nspars_ci[1][0], nspars_ci[1][2]], [nspars_ci[0][0], nspars_ci[0][2]]]
-                    scale_ci = [[nspars_ci[3][0], nspars_ci[3][2]], [nspars_ci[2][0], nspars_ci[2][2]]]
-                    c_ci = [nspars_ci[4][0], nspars_ci[4][2]]"""
-
                 else:
                     succes = False
                     nllh_val = np.nan
@@ -491,7 +481,6 @@ if __name__ == '__main__':
 
         out_s_pars[coord] = out_optim_s
         out_ns_pars[coord] = out_optim_ns
-
 
 
     #~ Save
