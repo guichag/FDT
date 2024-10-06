@@ -130,7 +130,7 @@ if __name__ == '__main__':
     parser.add_argument("--start_day", help="period start day", type=int, default=1)
     parser.add_argument("--end_month", help="period end month", type=int, default=12)
     parser.add_argument("--end_day", help="period end day", type=int, default=31)
-    parser.add_argument("--ymin", help="start year", type=int, default=1850)
+    parser.add_argument("--ymin", help="start year", type=int, default=1950)
     parser.add_argument("--ymax", help="end year", type=int, default=2014)
 
     opts = parser.parse_args()
