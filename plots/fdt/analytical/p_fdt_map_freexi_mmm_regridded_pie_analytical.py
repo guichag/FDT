@@ -63,7 +63,7 @@ def load_regridded_analytical_drr(ds='CMIP6', source='CanESM5', ssp_exp='ssp245'
     else:
         nd_ = ''
 
-    outdir = DATADIR + '/maps/' + ds + '/drr_regridded/' + ssp_exp + '/' + res_all + '/' + params_ + '/DRR'
+    outdir = DATADIR + '/maps/' + ds + '/drr_regridded/' + ssp_exp + '/' + res_all + '/' + params_ + '/FDT'
     outfile = outdir + '/global_drr_' + source + '_' + str(ymin) + '-' + str(ymax) + '_yref=' + str(yref) + '_N=' + str(nmems) + '_rrf=' + str(rrf) + nd_ + '.nc'
 
     out = xr.open_dataarray(outfile)
