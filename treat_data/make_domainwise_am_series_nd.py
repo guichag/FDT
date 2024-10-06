@@ -146,7 +146,7 @@ if __name__ == '__main__':
 
         out_rrs = np.asarray(out_rrs)
 
-        coords = get_coords(ds=ds, source=src, experiment=exp, member=mem_, lat_res=lat_res_, lon_res=lon_res_, var=var, yr=y)  #, lats=lat_sub, lons=lon_sub)
+        coords = get_coords(ds=ds, source=src, experiment=exp, member=mem_, lat_res=lat_res_, lon_res=lon_res_, var=var, yr=y, lats=(lat_min, lat_max), lons=(lon_min, lon_max))
 
         lats = coords[0]
         lons = coords[1]
