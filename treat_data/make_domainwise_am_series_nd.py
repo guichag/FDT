@@ -165,7 +165,7 @@ if __name__ == '__main__':
 
                     rr_ = [pd.Series(out_rr[:,ilat,ilon], index=dates[dates.year == int(years[iout_rr])]) for iout_rr, out_rr in enumerate(out_rrs)]
                     rrs_ = pd.concat(rr_, axis=0)
-                    rrs_nd = rrs_.rolling('{0}D'.format(nd)).mean()
+                    rrs_nd = rrs_.rolling('{0}D'.format(nd)).sum()
                     rrs_nd = rrs_nd.to_frame()
                     rrs_nd_ = rrs_nd.set_index([rrs_nd.index.year, rrs_nd.index.day])
                     rrs_nd_max = rrs_nd_.max(level=0)
