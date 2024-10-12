@@ -21,42 +21,6 @@ from cmip6.read_data.read_data import get_nc_file
 
 ### FUNC ###
 
-def load_am_series_domain_v2(ds='CMIP6', source='IPSL-CM6A-LR', experiment='historical', member='r1i1p1f1', lat_res=1.27, lon_res=2.5, lat_sub=(-90., 90.), lon_sub=(-180., 180.), ymin=1993, ymax=2014, ndays=None): # None
-    """Load AM series for a given domain"""
-    res_ = str(lat_res) + "x" + str(lon_res)
-
-    if ndays:
-        nd_ = '_' + str(ndays) + 'd'
-    else:
-        nd_ = ''
-
-    lat_min = -90. # lats_min[ds]
-    lat_max = 90. # lats_max[ds]
-    lon_min = -180. # lons_min[ds]
-    lon_max = 180. # lons_max[ds]
-
-    if lat_sub:
-        assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
-        lat_min_ = lat_sub[0]
-        lat_max_ = lat_sub[1]
-    else:
-        lat_min_ = lat_min
-        lat_max_ = lat_max
-
-    if lon_sub:
-        assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
-        lon_min_ = lon_sub[0]
-        lon_max_ = lon_sub[1]
-    else:
-        lon_min_ = lon_min
-        lon_max_ = lon_max
-
-    outfile = DATADIR + '/am_series/domain_wise/' + ds + '/' + source + '/' + experiment + '/' +  member + '/' + res_ + '/lat({0},{1})'.format(lat_min, lat_max) + '_lon({0},{1})'.format(lon_min, lon_max) + '/amax_' + str(ymin) + '-' + str(ymax) # + nd_
-
-    out = xr.open_dataarray(outfile)
-    
-    return out
-
 
 ### MAIN ###
 
@@ -74,6 +38,7 @@ if __name__ == '__main__':
     parser.add_argument("--end_day", help="period end day", type=int, default=31)
     parser.add_argument("--ymin", help="start year", type=int, default=1950)
     parser.add_argument("--ymax", help="end year", type=int, default=2014)
+    parser.add_argument("--ndays", help="RXnD", type=int, default=7)
 
     opts = parser.parse_args()
 
@@ -88,6 +53,7 @@ if __name__ == '__main__':
     eday = opts.end_day
     ymin = opts.ymin
     ymax = opts.ymax
+    nd = opts.ndays
 
     years = np.arange(ymin, ymax+1, 1)
     years_ = [str(y) for y in years]
@@ -96,7 +62,7 @@ if __name__ == '__main__':
     edate = [emonth, eday]
 
     if mem == None:
-        data_path = INDIR + '/' + ds + '/data/' + src + '/' + exp
+        data_path = INDIR + '/' + ds + '/' + src + '/' + exp
         mems = os.listdir(data_path)
     else:
         mems = mem
@@ -118,6 +84,7 @@ if __name__ == '__main__':
     print('GCM: {0}'.format(src))
     print('Members: {0}'.format(mems))
     print('Resolution: {0}'.format(res_))
+    print('RX{0}D'.format(nd))
 
 
     #~ Outdir
@@ -160,7 +127,8 @@ if __name__ == '__main__':
             data = data.pr
             data = data.where(data >= 0)
 
-            data_max = data.max(dim='time')
+            data_rm = data.rolling(time=nd).sum()
+            data_max = data_rm.max(dim='time')
 
             lats, lons = np.meshgrid(data_max.lat.values, data_max.lon.values)
 
@@ -192,7 +160,7 @@ if __name__ == '__main__':
             os.mkdir(outdir_ + '/lat({0},{1})'.format(lat_min, lat_max) + '_lon({0},{1})'.format(lon_min, lon_max))
         outdir_ = outdir_ + '/lat({0},{1})'.format(lat_min, lat_max) + '_lon({0},{1})'.format(lon_min, lon_max)
 
-        outfile = outdir_ + '/amax_' + str(ymin) + '-' + str(ymax)
+        outfile = outdir_ + '/amax_' + str(ymin) + '-' + str(ymax) + '_' + str(nd) + 'd'
 
         out_maxs_all.to_netcdf(outfile)
 
