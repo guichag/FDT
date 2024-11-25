@@ -21,7 +21,7 @@ from cmip6.read_data.read_data import get_nc_file
 
 ### FUNC ###
 
-def load_am_series_domain(ds='CMIP6', source='IPSL-CM6A-LR', experiment='historical', member='r1i1p1f1', lat_res=1.27, lon_res=2.5, lat_sub=(-90., 90.), lon_sub=(-180., 180.), ymin=1993, ymax=2014, ndays=None): # None
+def load_am_series_domain(ds='CMIP6', source='IPSL-CM6A-LR', experiment='historical', member='r1i1p1f1', lat_res=1.27, lon_res=2.5, lat_sub=(-90., 90.), lon_sub=(-180., 180.), ymin=1993, ymax=2014, ndays=None):
     """Load AM series for a given domain"""
     res_ = str(lat_res) + "x" + str(lon_res)
 
