@@ -138,9 +138,6 @@ if __name__ == '__main__':
             data_max_land = data_max.where(~mask_ocean)
 
             out_maxs.append(data_max_land)
-            #print(data_max_land.max())
-            #outfile_y = outdir_ + '/amax_' + str(y)
-            #sys.exit()
 
         out_maxs_all = xr.concat(out_maxs, dim='time', coords='minimal')
         out_maxs_all = out_maxs_all.assign_coords(time=years)
@@ -164,32 +161,6 @@ if __name__ == '__main__':
 
         out_maxs_all.to_netcdf(outfile)
 
-
-        '''out_ams = {}
-
-        for ilat, lat in enumerate(lats):
-            for ilon, lon in enumerate(lons):
-                lat_ = round(lat,2)
-                lon_ = round(lon,2)
-                coord = (lat_, lon_)
-
-                land_ = land[ilat, ilon]
-
-                if land_ == False:
-                    print("Compute AM series for lat: {0} / lon: {1}".format(lat_, lon_))
-
-                    rr_max_ = out_maxs[:, ilat, ilon]
-
-                    df_am = pd.Series(data=rr_max_, index=years)
-                    df_am_ = df_am.dropna()
-
-                    """if len(df_am_.index) >= len(years) - int(0.25*len(years)):  # ALLOW 25% of missing values
-                        out_ams[coord] = df_am
-                    else:
-                        out_ams[coord] = np.nan
-                        sys.exit()"""
-
-                    out_ams[coord] = df_am'''
 
 print('Done')
 
