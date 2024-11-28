@@ -196,7 +196,6 @@ if __name__ == '__main__':
     era5_LR.to_netcdf(outfile)'''
 
     ams_era5 = load_regridded_amax_series('reanalyses', 'ERA5', 'historical', grid_step, ymin_hist, ymax_ssp, 1, nd)
-    ams_era5 = ams_era5*24   # A SUPPRIMER !!!!!!!!!!!
 
 
     out_ams_srcs = []
