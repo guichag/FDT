@@ -6,7 +6,6 @@ import sys
 import argparse
 import pickle
 import dill
-import json
 import numpy as np
 import pandas as pd
 import rpy2.robjects as ro
@@ -38,7 +37,6 @@ method_gmle = ro.StrVector(['GMLE'])
 method_lmom = ro.StrVector(['Lmoments'])
 method_unc = ro.StrVector(["boot"]) # ['normal'])
 
-#to_json = ro.globalenv['to_json']
 ci_func_r_norm = ro.globalenv['get_ci_norm']
 ci_func_r_boot = ro.globalenv['get_ci_boot']
 
@@ -63,21 +61,6 @@ def load_sgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-L
     with open(outfile, 'rb') as pics:
         sgev_all = dill.load(pics)
 
-    # sub-sample
-    """lats = np.arange(lat_min_, lat_max_, lat_res)
-    lons = np.arange(lon_min_, lon_max_, lon_res)
-
-    output = {}
-
-    for lat_ in lats:
-        lat_key = (float(lat_), float(lat_+lat_res))
-
-        for lon_ in lons:
-            lon_key = (float(lon_), float(lon_+lon_res))
-
-            k = (lat_key, lon_key)  #'({0},{1})'.format(lat_, lon_)
-            output[k] = nsgev_all[k]"""
-
     return sgev_all
 
 
@@ -91,34 +74,19 @@ def load_nsgev_params_freexi_cmip_future_all_mems(ds='CMIP6', source='IPSL-CM6A-
     else:
         nd_ = ''
 
-    """assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
+    assert lat_sub[0] <= lat_sub[1], 'wrong latitude order'
     lat_min_ = lat_sub[0]
     lat_max_ = lat_sub[1]
 
     assert lon_sub[0] <= lon_sub[1], 'wrong latitude order'
     lon_min_ = lon_sub[0]
-    lon_max_ = lon_sub[1]"""
+    lon_max_ = lon_sub[1]
 
-    # load full s-gev dataset
+    # load full ns-gev dataset
     outfile = DATADIR + '/params/ns_all_mems/' + ds + '/' + source + '/' + experiment + '/' + res_ + '/' + params_ + '/' + str(ymin) + '-' + str(ymax) + '_N=' + str(nmembers) + nd_
 
     with open(outfile, 'rb') as pics:
         nsgev_all = dill.load(pics)
-
-    # sub-sample
-    """lats = np.arange(lat_min_, lat_max_, lat_res)
-    lons = np.arange(lon_min_, lon_max_, lon_res)
-
-    output = {}
-
-    for lat_ in lats:
-        lat_key = (float(lat_), float(lat_+lat_res))
-
-        for lon_ in lons:
-            lon_key = (float(lon_), float(lon_+lon_res))
-
-            k = (lat_key, lon_key)  #'({0},{1})'.format(lat_, lon_)
-            output[k] = nsgev_all[k]"""
 
     return nsgev_all
 
@@ -344,7 +312,7 @@ if __name__ == '__main__':
 
         # Fit NS model
 
-        if (-0.5 <= sxi <= 0.5) and (0 < nllh_s < 100000):  # treat failed S-GEV fit !!!!!!!!!!!!!
+        if (-0.5 <= sxi <= 0.5) and (0 < nllh_s < 100000):
 
             out_optim_s = {'succes': True, 'nllh': nllh_s, 'loc': sloc, 'scale': sscale, 'c': -sxi}
             out_s_fevd_ = sgev
