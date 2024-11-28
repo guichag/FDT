@@ -199,11 +199,8 @@ if __name__ == '__main__':
     orig_pars = load_nsgev_params_freexi_cmip_future_all_mems(ds=ds, source=src, experiment=ssp_exp, nmembers=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax, ndays=nd)
 
     """boots_pars_all = []
-
     for boot_range in boot_ranges:
-
         boots_pars = load_nsgev_unc_params_all_mems(ds=ds, source=src, experiment=ssp_exp, nmems=nmems, lat_res=lat_res_, lon_res=lon_res_, params=params, ymin=ymin, ymax=ymax, boot_range=boot_range)
-
         boots_pars_all.append(boots_pars)"""
 
     coords = list(orig_pars.keys())
