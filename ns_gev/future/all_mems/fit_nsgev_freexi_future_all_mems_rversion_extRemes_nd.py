@@ -6,7 +6,6 @@ import sys
 import argparse
 import pickle
 import dill
-import json
 import numpy as np
 import pandas as pd
 import rpy2.robjects as ro
@@ -40,7 +39,6 @@ method_gmle = ro.StrVector(['GMLE'])
 method_lmom = ro.StrVector(['Lmoments'])
 method_unc = ro.StrVector(["boot"]) # ['normal'])
 
-#to_json = ro.globalenv['to_json']
 ci_func_r_norm = ro.globalenv['get_ci_norm']
 ci_func_r_boot = ro.globalenv['get_ci_boot']
 
@@ -255,7 +253,6 @@ if __name__ == '__main__':
         # Fit S-GEV model  -> get first guess parameter values for NLLH minimization
 
         sgev = fevd_s_func_r(am_all.values, method)
-        #out_sgev = dict(zip(sgev.names, list(sgev)))  # https://stackoverflow.com/questions/24152160/converting-an-rpy2-listvector-to-a-python-dictionary
 
         sresults = sgev.rx2['results']
 
@@ -273,7 +270,7 @@ if __name__ == '__main__':
 
         # Fit NS model
 
-        if (-0.5 <= sxi <= 0.5) and (0 < nllh_s < 100000):  # treat failed S-GEV fit !!!!!!!!!!!!!
+        if (-0.5 <= sxi <= 0.5) and (0 < nllh_s < 100000):
 
             out_optim_s = {'succes': True, 'nllh': nllh_s, 'loc': sloc, 'scale': sscale, 'c': -sxi}
 
@@ -282,7 +279,7 @@ if __name__ == '__main__':
 
             ynorm = (am_all.index - am_all.index.min()) / (am_all.index.max() - am_all.index.min())
             
-            df_am_all = pd.DataFrame(data={'time': ynorm, 'am': am_all.values})  # , index=am_all.index
+            df_am_all = pd.DataFrame(data={'time': ynorm, 'am': am_all.values})
 
             am = ro.FloatVector(am_all.values) 
 
