@@ -1,6 +1,6 @@
 # FDT
 
-Estimation of the Frequency Doubling Time of daily rainfall extremes over global land regions: https://iopscience.iop.org/article/10.1088/2515-7620/ad9f12
+Estimation of the Frequency Doubling Time of 1-day and 7-day rainfall extremes over global land regions: https://iopscience.iop.org/article/10.1088/2515-7620/ad9f12
 
 The FDT is the time (in years) necessary for a T-year extreme (estimated at time t) to become a T'-year extreme, with T' = T/2
 
